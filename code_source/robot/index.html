@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pilotage Robo LEGO</title>
+    <script>
+        document.addEventListener("keypress", gerer_clavier);
+
+        let ip_robot = "192.168.1.169";
+        let port_robot = 1665;
+
+        function gerer_clavier(event) {
+            console.log(event);
+            if (event.key == 'a') {
+                fetch("http://" + ip_robot + ":" + port_robot + "/A");
+            }
+            if (event.key == 'r') {
+                fetch("http://" + ip_robot + ":" + port_robot + "/R");
+            }
+            if (event.key == 't') {
+                fetch("http://" + ip_robot + ":" + port_robot + "/T");
+            }
+            if (event.key == 's') {
+                fetch("http://" + ip_robot + ":" + port_robot + "/S");
+            }
+            
+        }
+
+        async function lire_capteur() {
+            console.log("Fetching sensor data...");
+            let response = await fetch("http://" + ip_robot + ":" + port_robot + "/?");
+            let data = await response.json();
+            console.log(data.snirium);
+            let champ_snirium = document.getElementById("snirium");
+            champ_snirium.innerHTML = data.snirium;
+
+            let distance = data.distance;  
+            let champ_distance = document.getElementById("distance");
+            champ_distance.innerHTML = distance;
+
+            let angle = data.angle;  
+            let champ_angle = document.getElementById("angle");
+            champ_angle.innerHTML = angle;
+
+            let moteur_gauche = data.moteur_gauche;  
+            let champ_moteur_gauche = document.getElementById("moteur_gauche");
+            champ_moteur_gauche.innerHTML =moteur_gauche;
+
+            let moteur_droite = data.moteur_droite;  
+            let champ_moteur_droite = document.getElementById("moteur_droite");
+            champ_moteur_droite.innerHTML = moteur_droite;
+        }
+        
+    </script>
+    <style>
+        button{
+            background-color: chocolate;
+        }
+    </style>
+</head>
+<body>
+   <h1>LEGO</h1> 
+   <button onclick="lire_capteur()">Lire Capteur</button>
+   <p>SNIRIUM=<span id="snirium">???<span></p>
+   <p>Angle=<span id="angle">???<span></p>
+   <p>Moteur Gauche=<span id="moteur_gauche">???<span></p>
+   <p>Moteur Droite=<span id="moteur_droite">???<span></p>
+   <p>Distance du capteur ultrason : <span id="distance">???<span></p>
+   
+</body>
+</html>
